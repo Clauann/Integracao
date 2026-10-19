@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Lixeira - Integrações</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #0f1115; color: #e1e1e1; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; margin: 0; }
+        .container { max-width: 900px; margin: auto; }
+        
+        .header-top { border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+        .btn-voltar { color: #007bff; text-decoration: none; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; font-weight: bold; }
+        .btn-voltar:hover { text-decoration: underline; }
+        h1 { font-weight: 300; color: #dc3545; margin: 0; font-size: 2em; }
+        p { color: #888; font-size: 16px; margin-top: 10px; }
+
+        .bank-card { background: #1a1d24; border: 1px solid #2a2d35; border-radius: 8px; padding: 20px 25px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; opacity: 0.7; }
+        .bank-info { display: flex; align-items: center; gap: 20px; }
+        .logo-img { width: 50px; height: 50px; border-radius: 8px; object-fit: contain; background: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; color: #1a1d24; filter: grayscale(100%); }
+        .bank-name { font-size: 20px; font-weight: 600; color: #fff; text-decoration: line-through; }
+        
+        .btn-restaurar { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: bold; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-restaurar:hover { background: #218838; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="btn-voltar"><i class="fa-solid fa-arrow-left"></i> Voltar para Integração</a>
+
+        <div class="header-top">
+            <h1><i class="fa-solid fa-trash-can"></i> Lixeira</h1>
+            <p>Os bancos apagados ficam guardados aqui. Você pode restaurá-los a qualquer momento.</p>
+        </div>
+
+        {% for banco in bancos %}
+        <div class="bank-card">
+            <div class="bank-info">
+                {% if banco['logo_url'] %}
+                    <img src="{{ banco['logo_url'] }}" class="logo-img" alt="Logo">
+                {% else %}
+                    <div class="logo-img">{{ banco['nome'][0] }}</div>
+                {% endif %}
+                <div class="bank-name">{{ banco['nome'] }}</div>
+            </div>
+            
+            <a href="/restaurar/{{ banco['id'] }}" class="btn-restaurar"><i class="fa-solid fa-rotate-left"></i> Restaurar Banco</a>
+        </div>
+        {% else %}
+        <p style="text-align: center; margin-top: 50px; font-size: 18px;"><i class="fa-solid fa-wind" style="font-size: 30px; display: block; margin-bottom: 10px;"></i> A lixeira está vazia.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
