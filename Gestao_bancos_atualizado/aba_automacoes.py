@@ -18,14 +18,13 @@ def listar_regras_python():
             regras[nome_exibicao] = {"tipo": "py", "caminho": os.path.join(PASTA_REGRAS, f)}
     return regras
 
-def executar_script_python(caminho, df):
+def executar_script_python(caminho, dict_dfs):
     nome_mod = os.path.basename(caminho)[:-3]
     spec = importlib.util.spec_from_file_location(nome_mod, caminho)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    return mod.processar(df)
+    return mod.processar(dict_dfs)
 
-# --- MODAL DO GESTOR DE CÓDIGOS ---
 @st.dialog("🛠️ Gestor de Códigos Python", width="large")
 def modal_gestor_codigos(opcoes):
     tab_editar, tab_criar = st.tabs(["✏️ Editar Regra", "➕ Criar Nova Regra"])
@@ -63,7 +62,7 @@ def modal_gestor_codigos(opcoes):
         nome_novo_arquivo = st.text_input("Nome do novo ficheiro (sem .py):", placeholder="ex: formatacao_vendas")
         conteudo_novo = st.text_area(
             "Insira o código Python:", 
-            value="def processar(df):\n    # Introduza a sua lógica de automação aqui\n    \n    return df", 
+            value="def processar(dict_dfs):\n    # Introduza a sua lógica de automação aqui\n    \n    return dict_dfs", 
             height=450, 
             key="area_novo"
         )
@@ -88,19 +87,16 @@ def modal_gestor_codigos(opcoes):
                         st.error(f"Erro ao criar o ficheiro: {e}")
             else:
                 st.warning("Por favor, introduza um nome para o novo ficheiro.")
-# --- FIM DO MODAL ---
 
 def pagina_automacoes():
     st.markdown('<div class="header-container"><span class="header-title" style="color: #28a745;"> Automações de Planilha</span></div>', unsafe_allow_html=True)
     
     opcoes = listar_regras_python()
 
-    # --- BOTÃO DISCRETO PARA ABRIR O GESTOR ---
     is_admin = st.session_state.get('is_admin', 0) == 1
     tem_permissao_codigo = st.session_state.get('perm_codigos', 0) == 1
 
     if is_admin or tem_permissao_codigo:
-        # Colocamos o botão alinhado à direita (opcional, mas fica bem organizado)
         col1, col2 = st.columns([4, 1])
         with col1:
             st.write("Coloque os seus scripts `.py` na pasta `regras_automacao`.")
@@ -119,8 +115,8 @@ def pagina_automacoes():
     if 'dataframes_processados' not in st.session_state:
         st.session_state['dataframes_processados'] = []
 
-    regra_selecionada = st.selectbox("Escolha qual a automação ira aplicar:", list(opcoes.keys()))
-    arquivos = st.file_uploader("Selecione as planilhas (.xlsx)", type=['xlsx'], accept_multiple_files=True)
+    regra_selecionada = st.selectbox("Escolha qual a automação irá aplicar:", list(opcoes.keys()))
+    arquivos = st.file_uploader("Selecione as planilhas (.xlsx)", type=['xlsx', 'csv'], accept_multiple_files=True)
     nome_saida = st.text_input("Nome do arquivo de saída", placeholder="Ex: Planilha_Final")
 
     if not arquivos:
@@ -131,38 +127,46 @@ def pagina_automacoes():
             processados = []
             info_regra = opcoes[regra_selecionada]
 
-            for i, file in enumerate(arquivos):
-                base_name = nome_saida if nome_saida else file.name.rsplit('.', 1)[0]
-                if len(arquivos) > 1: 
-                    base_name += f"_{i+1}"
-
-                try:
-                    df = pd.read_excel(file, dtype=str)
-                    resultado = executar_script_python(info_regra["caminho"], df)
-
-                    if isinstance(resultado, dict):
-                        for sufixo, df_export in resultado.items():
-                            nome_limpo = sufixo.replace('.xlsx', '')
-                            processados.append((nome_limpo, df_export))
-                    elif isinstance(resultado, tuple):
-                        processados.append((base_name, resultado[0]))
-                        if not resultado[1].empty:
-                            processados.append((f"{base_name}_CAIXA", resultado[1]))
+            try:
+                # CORREÇÃO: Lê todas as abas e cria um dicionário limpo para a automação
+                dict_entrada = {}
+                for file in arquivos:
+                    if file.name.lower().endswith('.csv'):
+                        df_temp = pd.read_csv(file, sep=';', encoding='latin1', dtype=str)
+                        dict_entrada[file.name] = df_temp
                     else:
-                        processados.append((base_name, resultado))
+                        abas = pd.read_excel(file, sheet_name=None, dtype=str)
+                        for nome_aba, df_aba in abas.items():
+                            chave = nome_aba if len(abas) > 1 else file.name
+                            dict_entrada[chave] = df_aba
 
-                except Exception as e:
-                    st.error(f"Erro ao processar o ficheiro {file.name}: {e}")
+                # Manda o dicionário de bases para o script Python
+                resultado = executar_script_python(info_regra["caminho"], dict_entrada)
 
-            st.session_state['dataframes_processados'] = processados
+                base_name = nome_saida if nome_saida else "Planilha_Saida"
+
+                if isinstance(resultado, dict):
+                    for sufixo, df_export in resultado.items():
+                        nome_limpo = sufixo.replace('.xlsx', '').replace('.csv', '')
+                        processados.append((nome_limpo, df_export))
+                elif isinstance(resultado, tuple):
+                    processados.append((base_name, resultado[0]))
+                    if not resultado[1].empty:
+                        processados.append((f"{base_name}_CAIXA", resultado[1]))
+                elif isinstance(resultado, pd.DataFrame):
+                    processados.append((base_name, resultado))
+
+                st.session_state['dataframes_processados'] = processados
+
+            except Exception as e:
+                st.error(f"Erro ao processar ficheiros: {e}")
 
     if st.session_state.get('dataframes_processados'):
-        st.success("✅ Arquivo(s) processado(s) com sucesso!")
-        st.write("Clique no botão abaixo para escolher a pasta e o formato (.xlsx ou .csv) onde deseja guardar:")
+        st.success("✅ Ficheiros processados com sucesso!")
+        st.write("Clique no botão abaixo para escolher a pasta onde deseja guardar:")
         
         for base_name, df_export in st.session_state['dataframes_processados']:
             if st.button(f"💾 Escolher local para salvar: {base_name}", key=f"btn_{base_name}"):
-                
                 root = tk.Tk()
                 root.attributes('-topmost', True)
                 root.withdraw()
@@ -173,7 +177,6 @@ def pagina_automacoes():
                     initialfile=f"{base_name}.xlsx",
                     title=f"Onde deseja guardar {base_name}?"
                 )
-                
                 root.destroy()
                 
                 if caminho_salvar:
@@ -183,10 +186,9 @@ def pagina_automacoes():
                         else:
                             with pd.ExcelWriter(caminho_salvar, engine='openpyxl') as writer:
                                 df_export.to_excel(writer, sheet_name='Sheet1', index=False)
-                                
-                        st.success(f"Arquivo salvo com sucesso em: `{caminho_salvar}`")
+                        st.success(f"Ficheiro guardado com sucesso em: `{caminho_salvar}`")
                     except Exception as e:
-                        st.error(f"Erro ao salvar o arquivo: {e}")
+                        st.error(f"Erro ao guardar o ficheiro: {e}")
 
 if __name__ == "__main__":
     pagina_automacoes()
