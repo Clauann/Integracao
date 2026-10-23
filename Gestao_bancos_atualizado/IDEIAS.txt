@@ -1,2 +1,0 @@
-preciso de algo para selecionar se é VBA ou PY
-no arquivo em VBA preciso tirar tudo que faz parte com o nome de uma aba ou seja tem que ser somente a macro sem nada para depender
