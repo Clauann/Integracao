@@ -1,0 +1,4 @@
+python -m pip install numpy XlsxWriter xlrd
+python -m pip install plotly streamlit-keyup
+python -m pip install openpyxl
+python -m pip install oletools

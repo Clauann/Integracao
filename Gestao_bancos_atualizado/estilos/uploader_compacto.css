@@ -1,0 +1,52 @@
+/* =====================================================================
+   CAIXINHA COMPACTA DE IMPORTAR XLSX (tracejada, 42px)
+   Usada ao lado da pesquisa (Integrações) e no topo do relatório Virtaus.
+   ===================================================================== */
+div[data-testid="stFileUploader"] {
+    margin-top: -2px !important;
+    margin-bottom: 0 !important;
+}
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"] {
+    min-height: 42px !important;
+    height: 42px !important;
+    padding: 4px 10px !important;
+    background-color: #161922 !important;
+    border: 1.5px dashed #3b4254 !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"]:hover {
+    border-color: #3b82f6 !important;
+    background-color: rgba(59, 130, 246, 0.08) !important;
+}
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"] > div {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 0 !important;
+}
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"] small,
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"] button,
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"] svg {
+    display: none !important;
+}
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"] span {
+    font-size: 0px !important;
+}
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"]::after {
+    content: "Arraste XLSX aqui" !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #9ba3b5 !important;
+    white-space: nowrap !important;
+}
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"]:hover::after {
+    color: #60a5fa !important;
+}
+div[data-testid="stFileUploader"] div[data-testid="stFileUploaderFile"] {
+    display: none !important;
+}

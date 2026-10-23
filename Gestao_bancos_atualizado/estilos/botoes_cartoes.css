@@ -1,0 +1,55 @@
+/* =====================================================================
+   BOTÕES DE AÇÃO DOS CARTÕES DE BANCO (Integrar | Falha | Justificar | Editar)
+   Aplicado apenas a blocos de colunas aninhados com exatamente 4 botões.
+   As imagens vêm das variáveis --img-int/--img-fal/--img-jus/--img-edi (definidas no app.py).
+   ===================================================================== */
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) button {
+    background-color: transparent !important;
+    border: 1px solid #2a2d35 !important;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+    transition: all .2s ease-in-out !important;
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+}
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) button p {
+    color: #8a8f99 !important;
+    font-weight: 600 !important;
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    transition: color .2s ease-in-out !important;
+    margin: 0 !important;
+}
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) button p::before {
+    content: '' !important;
+    display: inline-block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+/* 1. Integrar */
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(1) button:hover { border-color: #22c55e !important; background-color: rgba(34,197,94,.14) !important; }
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(1) button:hover p { color: #22c55e !important; }
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(1) button p::before { background-image: var(--img-int) !important; }
+
+/* 2. Falha */
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(2) button:hover { border-color: #ef4444 !important; background-color: rgba(239,68,68,.14) !important; }
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(2) button:hover p { color: #ef4444 !important; }
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(2) button p::before { background-image: var(--img-fal) !important; }
+
+/* 3. Justificar */
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(3) button:hover { border-color: #8b5cf6 !important; background-color: rgba(139,92,246,.14) !important; }
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(3) button:hover p { color: #c4b5fd !important; }
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(3) button p::before { background-image: var(--img-jus) !important; }
+
+/* 4. Editar */
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(4) button:hover { border-color: #f59e0b !important; background-color: rgba(245,158,11,.14) !important; }
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(4) button:hover p { color: #f59e0b !important; }
+[data-testid="stHorizontalBlock"] [data-testid="stHorizontalBlock"]:has(> div:nth-child(4):last-child) > div:nth-child(4) button p::before { background-image: var(--img-edi) !important; }

@@ -1,0 +1,65 @@
+/* =====================================================================
+   AUTOMAÇÕES
+   ===================================================================== */
+.auto-panel {
+    background: linear-gradient(180deg, #181c26 0%, #151821 100%);
+    border: 1px solid #232834;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+}
+.auto-panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #f1f5f9;
+    letter-spacing: 0.2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.auto-badge {
+    font-size: 11px;
+    font-weight: 600;
+    background: #1e2433;
+    color: #94a3b8;
+    padding: 3px 10px;
+    border-radius: 6px;
+}
+.result-box {
+    background: linear-gradient(180deg, #161c26 0%, #131820 100%);
+    border: 1px solid #23303f;
+    border-left: 3px solid #10b981;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 12px;
+}
+.result-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.result-box-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #f1f5f9;
+}
+.result-box-meta {
+    font-size: 11.5px;
+    color: #94a3b8;
+    background: #1c2430;
+    border: 1px solid #283344;
+    padding: 3px 10px;
+    border-radius: 6px;
+}
+/* Uploader grande desta página com visual mais limpo */
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"] {
+    background-color: #12151c !important;
+    border: 1.5px dashed #2e3546 !important;
+    border-radius: 12px !important;
+    transition: all .2s ease !important;
+}
+div[data-testid="stFileUploader"] section[data-testid="stFileUploaderDropzone"]:hover {
+    border-color: #3b82f6 !important;
+    background-color: rgba(59,130,246,0.06) !important;
+}
